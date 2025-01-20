@@ -34,33 +34,37 @@ router.patch("/quantity", async (req, res) =>{
         }
         cart.quantity = cart.quantity+increament;
         await cart.save();
-        res.status(200).json({cart});
+        const updatedCart = await Cart.find(); // Adjust filter as needed
+        res.status(200).json({cart: updatedCart})
     }catch(err){    
-        console.error("Error Quantity item:", error);
-        res.status(500).json({ message: "Server error", error });
+        console.error("Error Quantity item:", err);
+        res.status(500).json({ message: err.message });
     }
 })
 
 router.patch("/toggle", async (req, res) =>{
     try{
         const {id} =  req.body;
+        console.log(id);
         const cart = await Cart.findOne({id: id});
         if(!cart){
             return res.status(404).json({message: "Item not found"});
         }
         cart.selected = !cart.selected; 
         await cart.save();
-        res.status(200).json({cart});
+        const updatedCart = await Cart.find({}); // Adjust filter as needed
+        res.status(200).json({cart: updatedCart});
     }catch(err){
-        console.error("Error Toggle item:", error);
-        res.status(500).json({ message: "Server error", error });
+        console.error("Error Toggle item:", err);
+        res.status(500).json({ message: "Server error", err });
     }
 })
 
-router.delete("/delete", async (req, res) => {
+router.delete("/delete/:id", async (req, res) => {
+    console.log(req.url);
     try {
-        const { id } = req.body;
-
+        const { id } = req.params;
+        console.log(id);
         // Delete the specific item from the cart
         const deletedItem = await Cart.findOneAndDelete({ id: id });
 
@@ -69,9 +73,9 @@ router.delete("/delete", async (req, res) => {
         }
 
         // Fetch the updated cart schema
-        const cart = await Cart.find({}); // Adjust filter as needed
+        const updatedCart = await Cart.find(); // Adjust filter as needed
 
-        res.status(200).json({cart});
+        res.status(200).json({cart: updatedCart});
     } catch (error) {
         console.error("Error deleting item:", error);
         res.status(500).json({ message: "Server error", error });

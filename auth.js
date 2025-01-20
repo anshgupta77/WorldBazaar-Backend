@@ -130,5 +130,5 @@ function generateToken(data){
 
 
 app.listen(4070, ()=>{
-    console.log("Server is running 4070");
+    console.log("Auth Server is running 4070");
 })
