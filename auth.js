@@ -9,19 +9,10 @@ require("./connection");
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
-// const users = [];
+
 const User = require("./models/user")
 const sessions = new Set();
-// server
-// const sessions = new Map();
 
-
-// app.get("/", authToken, (req, res) =>{
-//     // console.log(req.cookies);
-//     // const user = req.user;
-//     // res.json({message: `helloe!!! ${user.username}`});
-//     res.json({message: "Hello world"});
-// })
 
 app.get("/admin", (req,res) =>{
     res.json(users);
@@ -68,14 +59,11 @@ app.post("/login", async (req,res) =>{
         console.log(err);
         return res.status(500).json({message: err.message});
     }
-    // const sessionId = crypto.randomUUID();
-
-    // sessions.set(sessionId, user);
-    // res.cookie("sessionId", sessionId);
+    
 
 
-    const userInfo = {username: user.username};
-    // const token_data = {user: userInfo};
+    const userInfo = {username: user.username, email: user.email};
+
     const token = generateToken(userInfo)
     const refresh_token = jwt.sign(userInfo,  process.env.REFRESH_TOKEN_SECRET);
     sessions.add(refresh_token);
@@ -83,6 +71,7 @@ app.post("/login", async (req,res) =>{
 })
 
 app.post("/token", (req,res) =>{
+    console.log(req.url);
     const refresh_token = req.body.token;
     if(!sessions.has(refresh_token)) return res.status(500).json({message: "Not authorise"});
 
@@ -93,7 +82,8 @@ app.post("/token", (req,res) =>{
 
         // timestamp should be remved so that it will generate new token.
         console.log(token_data);
-        const token = generateToken({user: token_data.username});
+        const {username, email} = token_data;
+        const token = generateToken({username: username, email: email});
         return res.json({ new_access_token : token});
     })
 })
@@ -125,7 +115,7 @@ app.delete("/logout", (req,res) =>{
 
 
 function generateToken(data){
-    return jwt.sign(data, process.env.ACCESS_TOKEN_SECRET);
+    return jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, {expiresIn: "5s"});
 }
 
 

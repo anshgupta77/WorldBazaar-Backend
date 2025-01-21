@@ -16,6 +16,10 @@ app.use("/cart", cartRouter);
 
 const productRouter = require("./routes/product");
 app.use("/product", productRouter);
+
+const userRouter = require("./routes/user");
+app.use("/user", userRouter);
+
 app.listen(PORT, (req, res) =>{
     console.log(`Index Server is running on port ${PORT}`);
 })
