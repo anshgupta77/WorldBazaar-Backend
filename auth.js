@@ -67,7 +67,7 @@ app.post("/login", async (req,res) =>{
     const token = generateToken(userInfo)
     const refresh_token = jwt.sign(userInfo,  process.env.REFRESH_TOKEN_SECRET);
     sessions.add(refresh_token);
-    res.status(201).json({token: token, refresh_token: refresh_token});
+    res.status(201).json({token: token, refresh_token: refresh_token, user: userInfo});
 })
 
 app.post("/token", (req,res) =>{
@@ -115,7 +115,7 @@ app.delete("/logout", (req,res) =>{
 
 
 function generateToken(data){
-    return jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, {expiresIn: "5s"});
+    return jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, {expiresIn: "15s"});
 }
 
 
