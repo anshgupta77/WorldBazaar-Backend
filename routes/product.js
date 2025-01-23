@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Product = require("./../models/project");
+const Product = require("./../models/product");
 const {authToken} = require("../middleware/authToken");
 router.use(authToken);
 router.get("/", async (req, res) =>{

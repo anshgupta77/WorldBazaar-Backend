@@ -10,8 +10,8 @@ app.use(express.json());
 app.use(cors());
 
 
-const cartRouter = require("./routes/cart");
-app.use("/cart", cartRouter);
+// const cartRouter = require("./routes/cart");
+// app.use("/cart", cartRouter);
 
 
 const productRouter = require("./routes/product");
